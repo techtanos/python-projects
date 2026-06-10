@@ -17,10 +17,12 @@ def invoice():
     seller_name = request.form['seller_name']
     seller_tax = request.form['seller_tax']
     client_name = request.form['client_name']
-    service = request.form['service']
-    price = float(request.form['price'])
-    vat = price * 0.20
-    total = price + vat
+    services = request.form.getlist('service[]')
+    prices = request.form.getlist('price[]')
+    prices = [float(p) for p in prices]
+    subtotal = sum(prices)
+    vat = subtotal * 0.20
+    total = subtotal + vat
     invoice_number = f"ED-{random.randint(1000, 9999)}"
     invoice_date = datetime.datetime.now().strftime("%d/%m/%Y")
     # Create PDF in memory
@@ -57,21 +59,25 @@ def invoice():
     # Line
     pdf.line(50, height - 280, width - 50, height - 280)
 
-    # Service
+    # Services
     pdf.setFont("Helvetica-Bold", 12)
-    pdf.drawString(50, height - 310, "Service:")
-    pdf.setFont("Helvetica", 12)
-    pdf.drawString(50, height - 330, service)
+    pdf.drawString(50, height - 310, "Services:")
+    y = height - 330
+    for i, (service, price) in enumerate(zip(services, prices)):
+        pdf.setFont("Helvetica", 12)
+        pdf.drawString(50, y, f"- {service}")
+        pdf.drawString(400, y, f"{price} MAD")
+        y -= 20
 
     # Line
-    pdf.line(50, height - 350, width - 50, height - 350)
+    pdf.line(50, y - 10, width - 50, y - 10)
 
     # Prices
     pdf.setFont("Helvetica", 12)
-    pdf.drawString(50, height - 380, f"Price:        {price} MAD")
-    pdf.drawString(50, height - 400, f"VAT (20%):    {vat} MAD")
+    pdf.drawString(50, y - 35, f"Subtotal:     {subtotal} MAD")
+    pdf.drawString(50, y - 55, f"VAT (20%):    {vat} MAD")
     pdf.setFont("Helvetica-Bold", 14)
-    pdf.drawString(50, height - 430, f"TOTAL:        {total} MAD")
+    pdf.drawString(50, y - 85, f"TOTAL:        {total} MAD")
 
     # Footer
     pdf.setFont("Helvetica", 10)

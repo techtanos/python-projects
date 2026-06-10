@@ -81,6 +81,28 @@
             background: #f1f5f9;
             margin: 8px 0 24px;
         }
+.service-row {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.service-row input {
+    margin-bottom: 0;
+}
+
+.add-btn {
+    background: #f1f5f9;
+    color: #2563eb;
+    border: 1.5px dashed #2563eb;
+    margin-top: 0;
+    font-size: 13px;
+    padding: 10px;
+}
+
+.add-btn:hover {
+    background: #e0e7ff;
+}
     </style>
 </head>
 <body>
@@ -98,9 +120,27 @@
             <input type="text" name="client_name" placeholder="Client Name" required>
 
             <div class="divider"></div>
-            <h3>Service</h3>
-            <input type="text" name="service" placeholder="Service Description" required>
-            <input type="number" name="price" placeholder="Price (MAD)" required>
+            <h3>Services</h3>
+<div id="services">
+    <div class="service-row">
+        <input type="text" name="service[]" placeholder="Service Description" required>
+        <input type="number" name="price[]" placeholder="Price (MAD)" required>
+    </div>
+</div>
+<button type="button" onclick="addService()" class="add-btn">+ Add Another Service</button>
+
+<script>
+function addService() {
+    const container = document.getElementById('services');
+    const row = document.createElement('div');
+    row.className = 'service-row';
+    row.innerHTML = `
+        <input type="text" name="service[]" placeholder="Service Description">
+        <input type="number" name="price[]" placeholder="Price (MAD)">
+    `;
+    container.appendChild(row);
+}
+</script>
 
             <button type="submit">Generate Invoice PDF</button>
         </form>
