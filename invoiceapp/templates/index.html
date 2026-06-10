@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>ExpressDeal - Invoice Generator</title>
+</head>
+<body>
+    <h1>ExpressDeal</h1>
+    <h3>Create Your Invoice</h3>
+    
+    <form method="POST" action="/invoice">
+        <h4>Your Details</h4>
+        <input type="text" name="seller_name" placeholder="Your Name" required><br><br>
+        <input type="text" name="seller_tax" placeholder="Your Tax ID" required><br><br>
+        
+        <h4>Client Details</h4>
+        <input type="text" name="client_name" placeholder="Client Name" required><br><br>
+        
+        <h4>Service</h4>
+        <input type="text" name="service" placeholder="Service Description" required><br><br>
+        <input type="number" name="price" placeholder="Price (MAD)" required><br><br>
+        
+        <button type="submit">Generate Invoice</button>
+    </form>
+</body>
+</html>
