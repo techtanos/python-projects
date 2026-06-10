@@ -2,24 +2,108 @@
 <html>
 <head>
     <title>ExpressDeal - Invoice Generator</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: #f0f4f8;
+            display: flex;
+            justify-content: center;
+            padding: 40px 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 12px;
+            padding: 40px;
+            width: 100%;
+            max-width: 560px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: 700;
+            color: #2563eb;
+            margin-bottom: 6px;
+        }
+
+        .tagline {
+            font-size: 14px;
+            color: #64748b;
+            margin-bottom: 32px;
+        }
+
+        h3 {
+            font-size: 13px;
+            font-weight: 600;
+            color: #94a3b8;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin: 24px 0 12px;
+        }
+
+        h3:first-of-type { margin-top: 0; }
+
+        input {
+            width: 100%;
+            padding: 12px 14px;
+            border: 1.5px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 14px;
+            color: #1e293b;
+            margin-bottom: 10px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        input:focus { border-color: #2563eb; }
+
+        button {
+            width: 100%;
+            padding: 14px;
+            background: #2563eb;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 24px;
+            transition: background 0.2s;
+        }
+
+        button:hover { background: #1d4ed8; }
+
+        .divider {
+            height: 1px;
+            background: #f1f5f9;
+            margin: 8px 0 24px;
+        }
+    </style>
 </head>
 <body>
-    <h1>ExpressDeal</h1>
-    <h3>Create Your Invoice</h3>
-    
-    <form method="POST" action="/invoice">
-        <h4>Your Details</h4>
-        <input type="text" name="seller_name" placeholder="Your Name" required><br><br>
-        <input type="text" name="seller_tax" placeholder="Your Tax ID" required><br><br>
-        
-        <h4>Client Details</h4>
-        <input type="text" name="client_name" placeholder="Client Name" required><br><br>
-        
-        <h4>Service</h4>
-        <input type="text" name="service" placeholder="Service Description" required><br><br>
-        <input type="number" name="price" placeholder="Price (MAD)" required><br><br>
-        
-        <button type="submit">Generate Invoice</button>
-    </form>
+    <div class="container">
+        <div class="logo">ExpressDeal</div>
+        <div class="tagline">Professional invoices in seconds</div>
+
+        <form method="POST" action="/invoice">
+            <h3>Your Details</h3>
+            <input type="text" name="seller_name" placeholder="Your Full Name" required>
+            <input type="text" name="seller_tax" placeholder="Tax ID (ICE / CIN)" required>
+
+            <div class="divider"></div>
+            <h3>Client Details</h3>
+            <input type="text" name="client_name" placeholder="Client Name" required>
+
+            <div class="divider"></div>
+            <h3>Service</h3>
+            <input type="text" name="service" placeholder="Service Description" required>
+            <input type="number" name="price" placeholder="Price (MAD)" required>
+
+            <button type="submit">Generate Invoice PDF</button>
+        </form>
+    </div>
 </body>
 </html>
