@@ -1,4 +1,8 @@
-
+import smtplib
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+from email.mime.base import MIMEBase
+from email import encoders
 import urllib.request
 import json
 import sqlite3
@@ -62,6 +66,32 @@ def load_user(user_id):
     if user:
         return User(user[0], user[1])
     return None
+def send_invoice_email(to_email, client_name, pdf_buffer, invoice_number, sender_email, sender_name):
+    app_password = "wyxi pwjl twfx eydy"
+    
+    msg = MIMEMultipart()
+    msg['From'] = sender_email
+    msg['To'] = to_email
+    msg['Subject'] = f"Invoice {invoice_number} from {sender_name}"
+    
+    body = f"Dear {client_name},\n\nPlease find your invoice {invoice_number} attached.\n\nBest regards,\n{sender_name}"
+    msg.attach(MIMEText(body, 'plain'))
+    
+    attachment = MIMEBase('application', 'octet-stream')
+    attachment.set_payload(pdf_buffer.getvalue())
+    encoders.encode_base64(attachment)
+    attachment.add_header('Content-Disposition', f'attachment; filename="invoice_{invoice_number}.pdf"')
+    msg.attach(attachment)
+    
+    try:
+        server = smtplib.SMTP('smtp.gmail.com', 587)
+        server.starttls()
+        server.login(sender_email, app_password)
+        server.sendmail(sender_email, to_email, msg.as_string())
+        server.quit()
+        return True
+    except:
+        return False
 @app.route('/')
 def home():
     return render_template('landing.html')
@@ -163,6 +193,18 @@ def invoice():
           (invoice_number, invoice_date, seller_name, client_name, total, current_user.id))
     conn.commit()
     conn.close()
+    # Send email if client email provided
+    if seller_email and client_name:
+        buffer.seek(0)
+        email_sent = send_invoice_email(
+            seller_email,
+            client_name,
+            buffer,
+            invoice_number,
+            seller_email,
+            seller_name
+        )
+        buffer.seek(0)
     return send_file(
         buffer,
         as_attachment=True,
