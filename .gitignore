@@ -5,3 +5,4 @@ __pycache__/
 *.pyc
 invoiceapp/invoices.db
 bandit17.key
+ai_test.py
