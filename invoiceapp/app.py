@@ -1,4 +1,6 @@
 import smtplib
+from flask_limiter import Limiter
+from flask_limiter.util import get_remote_address
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from email.mime.base import MIMEBase
@@ -18,6 +20,8 @@ import io
 
 app = Flask(__name__)
 app.secret_key = 'expressdeal2026'
+limiter = Limiter(key_func=get_remote_address)
+limiter.init_app(app)
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
@@ -101,6 +105,7 @@ def app_page():
     return render_template('index.html')
 
 @app.route('/invoice', methods=['POST'])
+@limiter.limit("10 per minute")
 def invoice():
     seller_name = request.form['seller_name']
     seller_tax = request.form['seller_tax']
@@ -241,6 +246,7 @@ def register():
     return render_template('register.html')
 
 @app.route('/login', methods=['GET', 'POST'])
+@limiter.limit("5 per minute")
 def login():
     if request.method == 'POST':
         email = request.form['email']
