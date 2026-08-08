@@ -106,7 +106,10 @@ def app_page():
 
 @app.route('/invoice', methods=['POST'])
 @limiter.limit("10 per minute")
+@login_required
 def invoice():
+    if not current_user.is_authenticated:
+        return redirect('/login')
     seller_name = request.form['seller_name']
     seller_tax = request.form['seller_tax']
     seller_phone = request.form['seller_phone']
